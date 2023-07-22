@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!-- saved from url=(0033)https://QicongXie.github.io/end2endvc/ -->
 <html lang="en-US">
 
 <head>
@@ -10,10 +9,8 @@
   <title>SALT
   </title>
   <meta name="generator" content="Jekyll v3.9.0">
-  <meta property="og:title" content="TODO: title">
+  <meta property="og:title" content="SALT">
   <meta property="og:locale" content="en_US">
-  <link rel="canonical" href="https://QicongXie.github.io/end2endvc/">
-  <meta property="og:url" content="https://QicongXie.github.io/end2endvc/">
   <meta name="twitter:card" content="summary">
   <!-- End Jekyll SEO tag -->
 
@@ -35,13 +32,13 @@
       <center>SALT: Distinguishable Speaker Anonymization Through Latent Space Transformation</center>
     </h1>
 
-    <center>BLIND</center>
+    <center>A work submitted to ASRU2023</center>
 
-    <h2>0. Contents</h2>
+    <h2>Contents</h2>
     <ol>
       <li><a href="#abstract">Abstract</a></li>
       <li><a href="#Anon">Demos - Anonymization</a></li>
-      <li><a href="#Accent">Demos - Accent</a></li>
+      <li><a href="#Accent">Demos - Accent Preservation</a></li>
     </ol>
 
     <br><br>
@@ -53,18 +50,18 @@
 
 
     <h2>2. Demos -- Anonymization<a name="Anon"></a></h2>
-    <p>Corresponding to section 4 in our paper, below lists the anonymized samples. We compared our proposed method with the baseline B1.a and NWPU-ASLP which randed first in VoicePrivacy Challenge.</p>
-    <p>Our proposed model is denoted as [B or L]-Sx-Px, where B or L means WavLM-Base or WavLM-Large encoder, Sx means the scale factor s = x, Px means the preservation factor p = x</p>
+    <p>Corresponding to Section 4 in our paper, below lists the anonymized samples. We compare our proposed method (SALT) with the  VoicePrivacy Challenge offical basline system (B1.a) and the top rank system (NWPU-ASLP).</p>
+    <p>Our proposed model is denoted as [B or L]-Sx-Px, where B or L means WavLM-Base or WavLM-Large encoder, Sx means the scale factor s = x, Px means the preservation factor p = x.</p>
 
     <table>
       <tbody id="tbody"></tbody>
     </table>
 
     <h2>3. Demos -- Accent Preservation<a name="Accent"></a></h2>
-    <p>Corresponding to Section 4.1 in our paper, below lists the ASR results of some accented speech. </p>
-    <p>We notice that the result of Whisper Large is usually better than U2++ in accented speeches. We hypothesis this is due to the accent robustiveness of ASR model.</p>
+    <p>Corresponding to Section 4.1 in our paper, below lists the ASR results of some speech clips with obvious accents.</p>
+    <p>We notice that the recognition result of Whisper Large is usually better than U2++ in recognizing accented speech. We hypothesis that this is due to the accent robustness of the Whisper ASR model.</p>
 
-    <p>The <span style='color: red'>red marked</span> text is the word with strong accent.</p>
+    <p>The text marked with <span style='color: red'>red colour</span> is the word with a strong accent.</p>
 
     <table>
       <tbody id="tbody2"></tbody>
@@ -293,15 +290,21 @@
         </tr>
         `
     acc_data=""
+
+    function process_str(s) {
+      s=s.toLowerCase()
+      s=s.replace("perhaps","Perhaps")
+      return s.charAt(0).toUpperCase() + s.slice(1)+'.';
+    }
     for (let acc_audio in acc_audio_names){
-      acc_data+=`<tr><td style="text-align: center" rowspan=3>${gt_trans[acc_audio].toLowerCase()}</td>\n`
+      acc_data+=`<tr><td style="text-align: center" rowspan=3>${process_str(gt_trans[acc_audio])}</td>\n`
       for (let method in acc_methods){
         console.log(anon_methods[method])
         trans=transscripts[acc_audio_names[acc_audio]][acc_methods[method]]
         console.log(trans)
         acc_data+=`<td style="text-align: center">
-          <strong>U2++Transcription (WER:${trans['u2']['wer']}%)</strong><br>${trans['u2']['rec'].toLowerCase()} <br>
-          <strong>Whisper Large Transcription (WER:${trans['wh']['wer']}%)</strong><br>${trans['wh']['rec'].toLowerCase()}
+          <strong>U2++Transcription (WER:${trans['u2']['wer']}%)</strong><br>${process_str(trans['u2']['rec'])} <br>
+          <strong>Whisper Large Transcription (WER:${trans['wh']['wer']}%)</strong><br>${process_str(trans['wh']['rec'])}
         </td>`
       }
       acc_data+='<tr>\n'
